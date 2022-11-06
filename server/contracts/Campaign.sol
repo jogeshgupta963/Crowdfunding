@@ -19,17 +19,14 @@ contract Campaign {
         string memory _title,
         uint256 _requiredAmount,
         string memory _image,
-        string memory _story
+        string memory _story,
+        address _owner
     ) {
         title = _title;
         requiredAmount = _requiredAmount;
         image = _image;
         story = _story;
-        owner = payable(msg.sender);
-    }
-
-    function name() public pure returns (string memory) {
-        return "Campaign";
+        owner = payable(_owner);
     }
 
     function donate() public payable {

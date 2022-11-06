@@ -7,7 +7,7 @@ const light = {
 const dark = {
   color: "#fff",
   bgColor: "#923cb5",
-  bgImage: "linear-gradient(180deg,#2f0f3d 5%,#0000 90%)",
+  bgImage: "linear-gradient(180deg,#2f0f3d 5%,#000000 90%)",
 };
 
 const themes = {

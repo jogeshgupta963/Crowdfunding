@@ -31,7 +31,8 @@ contract CampaignFactory {
             _title,
             _requiredAmount,
             _image,
-            _story
+            _story,
+            msg.sender
         );
         campaigns.push(address(campaign));
         emit campaignCreate(
