@@ -16,11 +16,15 @@
     "@mui/styled-engine-sc": "^5.10.3",
     "@reduxjs/toolkit": "^1.8.5",
     "ethers": "^5.7.2",
+    "ipfs-http-client": "^59.0.0",
     "next": "12.2.5",
-    "react": "18.2.0",
+    "react": "^18.2.0",
     "react-dom": "18.2.0",
+    "react-loader-spinner": "^5.3.4",
     "react-redux": "^8.0.2",
-    "styled-components": "^5.3.5"
+    "react-toastify": "^9.1.1",
+    "styled-components": "^5.3.5",
+    "toastify": "^2.0.1"
   },
   "devDependencies": {
     "babel-plugin-styled-components": "^2.0.7",

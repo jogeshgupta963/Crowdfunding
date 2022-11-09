@@ -2,7 +2,8 @@ import React from "react";
 import Header from "./Header";
 import themes from "./theme";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { ToastContainer } from "react-toastify";
 
 function Layout({ children }) {
   const { theme } = useSelector((state) => state.theme);
@@ -10,6 +11,7 @@ function Layout({ children }) {
   return (
     <>
       <ThemeProvider theme={themes[theme]}>
+        <ToastContainer />
         <LayoutWrapper>
           <GlobalStyle />
           <Header />

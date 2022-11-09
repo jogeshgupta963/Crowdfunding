@@ -3,7 +3,7 @@ import styled from "styled-components";
 import Brightness7icon from "@mui/icons-material/Brightness7";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useDispatch, useSelector } from "react-redux";
-import { changeTheme } from "../../redux/theme";
+import { changeTheme } from "../../../redux/theme";
 import Wallet from "./Wallet";
 
 function HeaderRight() {

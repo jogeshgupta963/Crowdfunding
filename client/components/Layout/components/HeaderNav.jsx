@@ -51,6 +51,3 @@ const HeaderNavLinks = styled.div`
   font-weight: bold;
 `;
 export default HeaderNav;
-
-// background-color: ${(props) =>
-//   props.active ? props.theme.bgSubDiv : props.theme.bgDiv}

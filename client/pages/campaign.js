@@ -1,7 +1,12 @@
 import React from "react";
+import Form from "../components/Form/Form";
 
 function CreateCampaign() {
-  return <div>CreateCampaign</div>;
+  return (
+    <div>
+      <Form />
+    </div>
+  );
 }
 
 export default CreateCampaign;
