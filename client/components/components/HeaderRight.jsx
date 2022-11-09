@@ -4,16 +4,17 @@ import Brightness7icon from "@mui/icons-material/Brightness7";
 import DarkModeIcon from "@mui/icons-material/DarkMode";
 import { useDispatch, useSelector } from "react-redux";
 import { changeTheme } from "../../redux/theme";
+import Wallet from "./Wallet";
 
 function HeaderRight() {
   const { theme } = useSelector((state) => state.theme);
   const dispatch = useDispatch();
   const themeHandle = () => {
     dispatch(changeTheme());
-    // console.log("here");
   };
   return (
     <HeaderRightWrapper>
+      <Wallet />
       <ThemeToggle onClick={themeHandle}>
         {theme == "dark" ? <Brightness7icon /> : <DarkModeIcon />}
       </ThemeToggle>
@@ -36,6 +37,7 @@ const ThemeToggle = styled.div`
   height: 100%;
   padding: 5px;
   width: 50px;
+  cursor: pointer;
   border-radius: 12px;
 `;
 export default HeaderRight;

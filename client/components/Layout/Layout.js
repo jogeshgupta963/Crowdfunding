@@ -2,17 +2,10 @@ import React from "react";
 import Header from "./Header";
 import themes from "./theme";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
-import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { changeTheme } from "../../redux/theme";
 
 function Layout({ children }) {
-  const dispatch = useDispatch();
   const { theme } = useSelector((state) => state.theme);
-
-  // const themeHandle = () => {
-  //   dispatch(changeTheme());
-  // };
 
   return (
     <>
