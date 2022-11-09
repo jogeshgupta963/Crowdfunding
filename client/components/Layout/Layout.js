@@ -3,18 +3,21 @@ import Header from "./Header";
 import themes from "./theme";
 import styled, { ThemeProvider, createGlobalStyle } from "styled-components";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { changeTheme } from "../../redux/theme";
 
 function Layout({ children }) {
-  const [theme, setTheme] = useState("light");
+  const dispatch = useDispatch();
+  const { theme } = useSelector((state) => state.theme);
 
-  const themeHandle = () => {
-    setTheme(theme === "light" ? "dark" : "light");
-  };
+  // const themeHandle = () => {
+  //   dispatch(changeTheme());
+  // };
 
   return (
     <>
       <ThemeProvider theme={themes[theme]}>
-        <LayoutWrapper onClick={themeHandle}>
+        <LayoutWrapper>
           <GlobalStyle />
           <Header />
           {children}

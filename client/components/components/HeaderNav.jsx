@@ -20,12 +20,19 @@ const HeaderNavWrapper = styled.div`
   border-radius: 10px;
 `;
 const HeaderNavLinks = styled.div`
-  font-family: "Roboto";
-  height: 100%;
-  margin:7px;
-  border:2px solid black
-  border-radius: 10px;
+  display:flex;
+  alighn-items: center;
+  justify-content: space-between;
   background-color: ${(props) => props.theme.bgSubDiv}
+  height: 100%;
+  font-family: "Roboto";
+  margin:7px;
+  border-radius: 10px;
   text-decoration: none;
+  padding:0 5px 5px;
+  cursor: pointer;
+  text-transform: uppercase;
+  font-weight: bold;
+
 `;
 export default HeaderNav;
