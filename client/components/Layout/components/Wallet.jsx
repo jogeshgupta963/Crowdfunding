@@ -67,6 +67,7 @@ const ConnectWallet = styled.div`
   justify-content: center;
   align-items: center;
   background: ${(props) => props.theme.bgDiv};
+  box-shadow: ${(props) => props.theme.showdowInput};
   padding: 0.4rem 1rem;
   height: 100%;
   cursor: pointer;

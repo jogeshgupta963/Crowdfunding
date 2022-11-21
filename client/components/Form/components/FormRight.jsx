@@ -148,6 +148,7 @@ const Input = styled.input`
   padding: 15px;
   background-color: ${(props) => props.theme.bgDiv};
   color: ${(props) => props.theme.color};
+  box-shadow: ${(props) => props.theme.showdowInput};
   margin-top: 4px;
   border: none;
   border-radius: 8px;
@@ -172,6 +173,7 @@ const Select = styled.select`
   padding: 15px;
   background-color: ${(props) => props.theme.bgDiv};
   color: ${(props) => props.theme.color};
+  box-shadow: ${(props) => props.theme.shadowButton};
   margin-top: 4px;
   border: none;
   border-radius: 8px;
@@ -183,6 +185,7 @@ const Select = styled.select`
 const Image = styled.input`
   background-color: ${(props) => props.theme.bgDiv};
   color: ${(props) => props.theme.color};
+  box-shadow: ${(props) => props.theme.shadowButton};
   margin-top: 4px;
   border: none;
   border-radius: 8px;
@@ -192,6 +195,7 @@ const Image = styled.input`
   &::-webkit-file-upload-button {
     padding: 15px;
     background-color: ${(props) => props.theme.bgSubDiv};
+    box-shadow: ${(props) => props.theme.shadowButton};
     color: ${(props) => props.theme.color};
     outline: none;
     border: none;
@@ -204,9 +208,9 @@ const Button = styled.button`
   justify-content: center;
   width: 100%;
   padding: 15px;
-  color: white;
-  background-color: #00b712;
-  background-image: linear-gradient(180deg, #00b712 0%, #5aff15 80%);
+  color: green;
+  background-color: ${(props) => props.theme.bgSubDiv};
+  box-shadow: ${(props) => props.theme.shadowButton};
   border: none;
   margin-top: 30px;
   cursor: pointer;

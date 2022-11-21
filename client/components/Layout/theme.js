@@ -1,17 +1,21 @@
 const light = {
   color: "#000",
-  bgColor: "#efe7fd",
-  bgImage: "linear-gradient(180deg,#efe7fd 0%,#bdccf7 60%)",
-  bgDiv: "#fff",
-  bgSubDiv: "#efe7fd",
+  bgColor: "#e0e0e0",
+  bgImage: "none",
+  bgDiv: "#e0e0e0",
+  bgSubDiv: "#e0e0e0",
+  showdowInput: "inset 5px 5px 10px #bebebe, inset -5px -5px 10px #ffffff",
+  shadowButton: "5px 5px 10px #bebebe, -5px -5px 10px #ffffff",
 };
 
 const dark = {
   color: "#fff",
-  bgColor: "#923cb5",
-  bgImage: "linear-gradient(180deg,#2f0f3d 5%,#000000 90%)",
-  bgDiv: "black",
-  bgSubDiv: "rgb(33,36,41)",
+  bgColor: "#1a1b1d",
+  bgImage: "none",
+  bgDiv: "#1a1b1d",
+  bgSubDiv: "#1a1b1d",
+  showdowInput: "inset 5px 5px 10px #161719, inset -5px -5px 10px #1e1f21",
+  shadowButton: "5px 5px 10px #161719, -5px -5px 10px #1e1f21",
 };
 
 const themes = {
