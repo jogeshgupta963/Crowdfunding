@@ -3,10 +3,7 @@ import { useState } from "react";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { TailSpin } from "react-loader-spinner";
-import { create as IPFSHTTPCLIENT } from "ipfs-http-client";
-
-const client = IPFSHTTPCLIENT("https://ipfs.infura:5001/api/v0");
-
+import axios from "axios";
 function FormRight({ title, story }) {
   const amount = useRef(0);
   const category = useRef("");
@@ -15,42 +12,72 @@ function FormRight({ title, story }) {
   const [imageUrl, setImageUrl] = useState(null);
 
   const [uploading, setUploading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [uploaded, setUploaded] = useState(false);
-  const campaignCreate = () => {
-    console.log(title.current.value);
-    console.log(story.current.value);
-    // console.log(amount.current.value);
-    // console.log(category.current.value);
-  };
   const uploadFiles = async (e) => {
-    e.preventDefault();
+    //upload files
     try {
-      setUploading(true);
-      if (story.current.value !== "") {
-        const add = await client.add(story.current.value);
-        setStoryUrl(add.path);
-      }
-    } catch (err) {
-      toast.warn("Error Uploading Story");
-      setUploading(false);
-      return;
-    }
-    try {
-      if (image !== null) {
-        const add = await client.add(image);
-        setImageUrl(add.path);
-      }
+      // setUploading(true);
+      const formData = new FormData();
+      formData.append("image", image);
+
+      const config = {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      };
+      // const data = await axios.get("/api/file", { image }, config);
+      const data = await axios.post(
+        "http://localhost:5000/file",
+        { image },
+        config
+      );
+      // const data = await fetch("/api/file");
+      // const resp = await data.json();
+      console.log(data);
+      // setUploading(false);
+      // setUploaded(true);
     } catch (err) {
       console.log(err);
-      toast.warn("Error Uploading Image");
-      setUploading(false);
-      return;
     }
-
-    setUploading(false);
-    setUploaded(true);
-    toast.success("Uploaded ");
   };
+  const startCampaign = async (e) => {
+    e.preventDefault();
+    // const provider = new ethers.providers.Web3Provider(window.ethereum);
+    // const signer = provider.getSigner();
+
+    // if (title === "") {
+    //   toast.warn("Title Field Is Empty");
+    // } else if (storyUrl === "") {
+    //   toast.warn("Story Field Is Empty");
+    // } else if (!amount) {
+    //   toast.warn("Required Amount Field Is Empty");
+    // } else if (uploaded == false) {
+    //   toast.warn("Files Upload Required");
+    // } else {
+    //   setLoading(true);
+
+    //   const contract = new ethers.Contract(
+    //     process.env.Deployed_Contract_Address,
+    //     CampaignFactory.abi,
+    //     signer
+    //   );
+
+    //   const CampaignAmount = ethers.utils.parseEther(form.requiredAmount);
+
+    //   const campaignData = await contract.createCampaign(
+    //     form.campaignTitle,
+    //     CampaignAmount,
+    //     imageUrl,
+    //     form.category,
+    //     storyUrl
+    //   );
+
+    //   await campaignData.wait();
+
+    //   setAddress(campaignData.to);
+  };
+  // };
   return (
     <FormRightWrapper>
       <FormInput>
@@ -95,7 +122,7 @@ function FormRight({ title, story }) {
           Files uploaded Sucessfully
         </Button>
       )}
-      <Button onClick={campaignCreate}>Start Campaign</Button>
+      <Button onClick={startCampaign}>Start Campaign</Button>
     </FormRightWrapper>
   );
 }
