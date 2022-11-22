@@ -13,7 +13,7 @@ function FormRight({ title, story }) {
   const [image, setImage] = useState(null);
   const [storyUrl, setStoryUrl] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
-  const [address, setAddress] = useState("");
+  const [address, setAddress] = useState("Education");
 
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,7 +53,7 @@ function FormRight({ title, story }) {
         setLoaded(false);
         const contract = new ethers.Contract(
           // process.env.Deployed_Contract_Address,
-          "0xeEb2C67c67a410248C094dFd7b7284B8c24818bD",
+          "0x96ce70C4625aDE8c917BAcB04E1d880B630A3999",
           CampaignFactory.abi,
           signer
         );
@@ -64,8 +64,8 @@ function FormRight({ title, story }) {
           title.current.value,
           campaignAmount,
           imageUrl,
-          storyUrl,
-          category
+          category.current.value,
+          storyUrl
         );
         await campaignData.wait();
 

@@ -12,7 +12,7 @@ task("accounts", "Prints list", async (taskArgs, hre) => {
 });
 module.exports = {
   solidity: "0.8.8",
-  defaultNetwork: "hardhat",
+  defaultNetwork: "polygon",
   networks: {
     hardhat: {},
     polygon: {

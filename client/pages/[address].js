@@ -1,55 +1,44 @@
 import styled from "styled-components";
 import Image from "next/image";
 import { ethers } from "ethers";
-import CampaignFactory from "../../server/artifacts/contracts/CampaignFactory.sol/CampaignFactory.json";
-import Campaign from "../../server/artifacts/contracts/Campaign.sol/Campaign.json";
+import CampaignFactory from "../utils/CampaignFactory.json";
+import Campaign from "../utils/Campaign.json";
 import { useEffect, useState } from "react";
 
-function Detail() {
+export default function Details({ Data, DonationsData }) {
+  console.log(Data);
+
   const [mydonations, setMydonations] = useState([]);
-  const [story, setStory] = useState("");
   const [amount, setAmount] = useState();
   const [change, setChange] = useState(false);
 
+  const Request = async () => {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    const Web3provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = Web3provider.getSigner();
+    const Address = await signer.getAddress();
+
+    const provider = new ethers.providers.JsonRpcProvider(
+      "https://polygon-mumbai.g.alchemy.com/v2/w-fqvGbEOfieIbLKKSEGwXbWmTuMt-rB"
+    );
+
+    const contract = new ethers.Contract(Data.address, Campaign.abi, provider);
+
+    const MyDonations = contract.filters.donated(Address);
+    const MyAllDonations = await contract.queryFilter(MyDonations);
+
+    setMydonations(
+      MyAllDonations.map((e) => {
+        return {
+          donar: e.args.donar,
+          amount: ethers.utils.formatEther(e.args.amount),
+          timestamp: parseInt(e.args.timestamp),
+        };
+      })
+    );
+  };
+
   useEffect(() => {
-    const Request = async () => {
-      let storyData;
-
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      const Web3provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = Web3provider.getSigner();
-      const Address = await signer.getAddress();
-
-      const provider = new ethers.providers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_RPC_URL
-      );
-
-      const contract = new ethers.Contract(
-        Data.address,
-        Campaign.abi,
-        provider
-      );
-
-      fetch("https://crowdfunding.infura-ipfs.io/ipfs/" + Data.storyUrl)
-        .then((res) => res.text())
-        .then((data) => (storyData = data));
-
-      const MyDonations = contract.filters.donated(Address);
-      const MyAllDonations = await contract.queryFilter(MyDonations);
-
-      setMydonations(
-        MyAllDonations.map((e) => {
-          return {
-            donar: e.args.donar,
-            amount: ethers.utils.formatEther(e.args.amount),
-            timestamp: parseInt(e.args.timestamp),
-          };
-        })
-      );
-
-      setStory(storyData);
-    };
-
     Request();
   }, [change]);
 
@@ -76,16 +65,26 @@ function Detail() {
     <DetailWrapper>
       <LeftContainer>
         <ImageSection>
-          <Image
+          <img
             alt="crowdfunding dapp"
             layout="fill"
-            src={"https://crowdfunding.infura-ipfs.io/ipfs/" + Data.image}
+            src={Data.image}
+            style={{ width: "100%" }}
           />
         </ImageSection>
-        <Text>{story}</Text>
+        <Text>
+          <iframe
+            id="frmFile"
+            src={Data.storyUrl}
+            // onLoad="LoadFile();"
+            style={{ width: "100%" }}
+          ></iframe>
+        </Text>
       </LeftContainer>
       <RightContainer>
-        <Title>{Data.title}</Title>
+        <Title>
+          {Data.title} ({Data.owner.slice(0, 6)}...{Data.owner.slice(39)})
+        </Title>
         <DonateSection>
           <Input
             value={amount}
@@ -146,22 +145,22 @@ function Detail() {
 
 export async function getStaticPaths() {
   const provider = new ethers.providers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_URL
+    "https://polygon-mumbai.g.alchemy.com/v2/w-fqvGbEOfieIbLKKSEGwXbWmTuMt-rB"
   );
 
   const contract = new ethers.Contract(
-    process.env.NEXT_PUBLIC_ADDRESS,
+    "0x96ce70C4625aDE8c917BAcB04E1d880B630A3999",
     CampaignFactory.abi,
     provider
   );
 
-  const getAllCampaigns = contract.filters.campaignCreated();
+  const getAllCampaigns = contract.filters.campaignCreate();
   const AllCampaigns = await contract.queryFilter(getAllCampaigns);
 
   return {
     paths: AllCampaigns.map((e) => ({
       params: {
-        address: e.args.campaignAddress.toString(),
+        address: e.args.campaign.toString(),
       },
     })),
     fallback: "blocking",
@@ -170,7 +169,7 @@ export async function getStaticPaths() {
 
 export async function getStaticProps(context) {
   const provider = new ethers.providers.JsonRpcProvider(
-    process.env.NEXT_PUBLIC_RPC_URL
+    "https://polygon-mumbai.g.alchemy.com/v2/w-fqvGbEOfieIbLKKSEGwXbWmTuMt-rB"
   );
 
   const contract = new ethers.Contract(
@@ -184,7 +183,7 @@ export async function getStaticProps(context) {
   const image = await contract.image();
   const storyUrl = await contract.story();
   const owner = await contract.owner();
-  const receivedAmount = await contract.receivedAmount();
+  const receivedAmount = await contract.recievedAmount();
 
   const Donations = contract.filters.donated();
   const AllDonations = await contract.queryFilter(Donations);
@@ -332,4 +331,3 @@ const DonationData = styled.p`
   margin: 0;
   padding: 0;
 `;
-export default Detail;

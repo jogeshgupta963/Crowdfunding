@@ -8,6 +8,8 @@ import { ethers } from "ethers";
 import CampaignFactory from "../utils/CampaignFactory.json";
 import { useState } from "react";
 import Link from "next/link";
+import { useEffect } from "react";
+import { width } from "@mui/system";
 
 export default function Home({
   AllData,
@@ -31,148 +33,147 @@ export default function Home({
       {/* Cards Container */}
       <CardsWrapper>
         {/* Card */}
-        {filter.map((e) => {
-          return (
-            <Card key={e.title}>
-              <CardImg>
-                <Image
-                  alt="Crowdfunding dapp"
-                  layout="fill"
-                  src={"https://crowdfunding.infura-ipfs.io/ipfs/" + e.image}
-                />
-              </CardImg>
-              <Title>{e.title}</Title>
-              <CardData>
-                <Text>
-                  Owner
-                  <AccountBoxIcon />
-                </Text>
-                <Text>
-                  {e.owner.slice(0, 6)}...{e.owner.slice(39)}
-                </Text>
-              </CardData>
-              <CardData>
-                <Text>
-                  Amount
-                  <PaidIcon />
-                </Text>
-                <Text>{e.amount} Matic</Text>
-              </CardData>
-              <CardData>
-                <Text>
-                  <EventIcon />
-                </Text>
-                <Text>{new Date(e.timeStamp * 1000).toLocaleString()}</Text>
-              </CardData>
-              <Link passHref href={"/" + e.address}>
-                <Button>Go to Campaign</Button>
-              </Link>
-            </Card>
-          );
-        })}
+        {filter.length > 0 &&
+          filter.map((e) => {
+            return (
+              <Card key={e.title}>
+                <CardImg>
+                  <img src={e.image} style={{ width: "80%", height: "100%" }} />
+                </CardImg>
+                <Title>{e.title}</Title>
+                <CardData>
+                  <Text>
+                    Owner
+                    <AccountBoxIcon />
+                  </Text>
+                  <Text>
+                    {e.owner.slice(0, 6)}...{e.owner.slice(39)}
+                  </Text>
+                </CardData>
+                <CardData>
+                  <Text>
+                    Amount
+                    <PaidIcon />
+                  </Text>
+                  <Text>{e.amount} Matic</Text>
+                </CardData>
+                <CardData>
+                  <Text>
+                    <EventIcon />
+                  </Text>
+                  {/* <Text>{new Date(e.timeStamp * 1000).toLocaleString()}</Text> */}
+                </CardData>
+                <Link passHref href={"/" + e.address}>
+                  <Button>Go to Campaign</Button>
+                </Link>
+              </Card>
+            );
+          })}
         {/* Card */}
       </CardsWrapper>
     </HomeWrapper>
   );
 }
 
-// export async function getStaticProps() {
-//   const provider = new ethers.providers.JsonRpcProvider(
-//     process.env.NEXT_PUBLIC_RPC_URL
-//   );
+export async function getStaticProps() {
+  const provider = new ethers.providers.JsonRpcProvider(
+    // process.env.POLYGON_API_HTTP
+    "https://polygon-mumbai.g.alchemy.com/v2/w-fqvGbEOfieIbLKKSEGwXbWmTuMt-rB"
+  );
 
-//   const contract = new ethers.Contract(
-//     "0xeEb2C67c67a410248C094dFd7b7284B8c24818bD",
-//     CampaignFactory.abi,
-//     provider
-//   );
+  const contract = new ethers.Contract(
+    "0x96ce70C4625aDE8c917BAcB04E1d880B630A3999",
+    CampaignFactory.abi,
+    provider
+  );
 
-//   const getAllCampaigns = contract.filters.campaignCreated();
-//   const AllCampaigns = await contract.queryFilter(getAllCampaigns);
-//   const AllData = AllCampaigns.map((e) => {
-//     return {
-//       title: e.args.title,
-//       image: e.args.imgURI,
-//       owner: e.args.owner,
-//       timeStamp: parseInt(e.args.timestamp),
-//       amount: ethers.utils.formatEther(e.args.requiredAmount),
-//       address: e.args.campaignAddress,
-//     };
-//   });
+  const getAllCampaigns = contract.filters.campaignCreate();
+  const AllCampaigns = await contract.queryFilter(getAllCampaigns);
+  const AllData = AllCampaigns.map((e) => {
+    return {
+      title: e.args.title,
+      image: e.args.image,
+      owner: e.args.owner,
+      timeStamp: parseInt(e.args.timeStamp),
+      amount: ethers.utils.formatEther(e.args.requiredAmount),
+      address: e.args.campaign,
+    };
+  });
 
-//   const getHealthCampaigns = contract.filters.campaignCreated(
-//     null,
-//     null,
-//     null,
-//     null,
-//     null,
-//     null,
-//     "Health"
-//   );
-//   const HealthCampaigns = await contract.queryFilter(getHealthCampaigns);
-//   const HealthData = HealthCampaigns.map((e) => {
-//     return {
-//       title: e.args.title,
-//       image: e.args.imgURI,
-//       owner: e.args.owner,
-//       timeStamp: parseInt(e.args.timestamp),
-//       amount: ethers.utils.formatEther(e.args.requiredAmount),
-//       address: e.args.campaignAddress,
-//     };
-//   });
+  const getHealthCampaigns = contract.filters.campaignCreate(
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    "Health"
+  );
+  const HealthCampaigns = await contract.queryFilter(getHealthCampaigns);
 
-//   const getEducationCampaigns = contract.filters.campaignCreated(
-//     null,
-//     null,
-//     null,
-//     null,
-//     null,
-//     null,
-//     "education"
-//   );
-//   const EducationCampaigns = await contract.queryFilter(getEducationCampaigns);
-//   const EducationData = EducationCampaigns.map((e) => {
-//     return {
-//       title: e.args.title,
-//       image: e.args.imgURI,
-//       owner: e.args.owner,
-//       timeStamp: parseInt(e.args.timestamp),
-//       amount: ethers.utils.formatEther(e.args.requiredAmount),
-//       address: e.args.campaignAddress,
-//     };
-//   });
+  const HealthData = HealthCampaigns.map((e) => {
+    return {
+      title: e.args.title,
+      image: e.args.image,
+      owner: e.args.owner,
+      timeStamp: parseInt(e.args.timeStamp),
+      amount: ethers.utils.formatEther(e.args.requiredAmount),
+      address: e.args.campaign,
+    };
+  });
 
-//   const getAnimalCampaigns = contract.filters.campaignCreated(
-//     null,
-//     null,
-//     null,
-//     null,
-//     null,
-//     null,
-//     "Animal"
-//   );
-//   const AnimalCampaigns = await contract.queryFilter(getAnimalCampaigns);
-//   const AnimalData = AnimalCampaigns.map((e) => {
-//     return {
-//       title: e.args.title,
-//       image: e.args.imgURI,
-//       owner: e.args.owner,
-//       timeStamp: parseInt(e.args.timestamp),
-//       amount: ethers.utils.formatEther(e.args.requiredAmount),
-//       address: e.args.campaignAddress,
-//     };
-//   });
+  const getEducationCampaigns = contract.filters.campaignCreate(
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    "Education"
+  );
+  const EducationCampaigns = await contract.queryFilter(getEducationCampaigns);
+  const EducationData = EducationCampaigns.map((e) => {
+    return {
+      title: e.args.title,
+      image: e.args.image,
+      owner: e.args.owner,
+      timeStamp: parseInt(e.args.timeStamp),
+      amount: ethers.utils.formatEther(e.args.requiredAmount),
+      address: e.args.campaign,
+    };
+  });
 
-//   return {
-//     props: {
-//       AllData,
-//       HealthData,
-//       EducationData,
-//       AnimalData,
-//     },
-//     revalidate: 10,
-//   };
-// }
+  const getAnimalCampaigns = contract.filters.campaignCreate(
+    null,
+    null,
+    null,
+    null,
+    null,
+    null,
+    "Animal"
+  );
+  const AnimalCampaigns = await contract.queryFilter(getAnimalCampaigns);
+  const AnimalData = AnimalCampaigns.map((e) => {
+    return {
+      title: e.args.title,
+      image: e.args.image,
+      owner: e.args.owner,
+      timeStamp: parseInt(e.args.timeStamp),
+      amount: ethers.utils.formatEther(e.args.requiredAmount),
+      address: e.args.campaign,
+    };
+  });
+
+  return {
+    props: {
+      AllData,
+      HealthData,
+      EducationData,
+      AnimalData,
+    },
+    revalidate: 10,
+  };
+}
 
 const HomeWrapper = styled.div`
   display: flex;

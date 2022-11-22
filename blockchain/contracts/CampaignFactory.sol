@@ -24,8 +24,8 @@ contract CampaignFactory {
         string memory _title,
         uint256 _requiredAmount,
         string memory _image,
-        string memory _story,
-        string memory _category
+        string memory _category,
+        string memory _story
     ) public {
         Campaign campaign = new Campaign(
             _title,

@@ -5,48 +5,49 @@ import PaidIcon from "@mui/icons-material/Paid";
 import EventIcon from "@mui/icons-material/Event";
 import Image from "next/image";
 import { ethers } from "ethers";
-import CampaignFactory from "../artifacts/contracts/Campaign.sol/CampaignFactory.json";
+import CampaignFactory from "../utils/CampaignFactory.json";
 import { useEffect, useState } from "react";
 import Link from "next/link";
 
-export default function dashboard() {
+export default function Dashboard() {
   const [campaignsData, setCampaignsData] = useState([]);
 
+  const Request = async () => {
+    await window.ethereum.request({ method: "eth_requestAccounts" });
+    const Web3provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = Web3provider.getSigner();
+    const Address = await signer.getAddress();
+
+    const provider = new ethers.providers.JsonRpcProvider(
+      "https://polygon-mumbai.g.alchemy.com/v2/w-fqvGbEOfieIbLKKSEGwXbWmTuMt-rB"
+    );
+
+    const contract = new ethers.Contract(
+      "0x96ce70C4625aDE8c917BAcB04E1d880B630A3999",
+      CampaignFactory.abi,
+      provider
+    );
+
+    const getAllCampaigns = contract.filters.campaignCreate(
+      null,
+      null,
+      Address
+    );
+    const AllCampaigns = await contract.queryFilter(getAllCampaigns);
+    const AllData = AllCampaigns.map((e) => {
+      return {
+        title: e.args.title,
+        image: e.args.image,
+        owner: e.args.owner,
+        timeStamp: parseInt(e.args.timestamp),
+        amount: ethers.utils.formatEther(e.args.requiredAmount),
+        address: e.args.campaignAddress,
+      };
+    });
+    setCampaignsData(AllData);
+  };
+
   useEffect(() => {
-    const Request = async () => {
-      await window.ethereum.request({ method: "eth_requestAccounts" });
-      const Web3provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = Web3provider.getSigner();
-      const Address = await signer.getAddress();
-
-      const provider = new ethers.providers.JsonRpcProvider(
-        process.env.NEXT_PUBLIC_RPC_URL
-      );
-
-      const contract = new ethers.Contract(
-        process.env.NEXT_PUBLIC_ADDRESS,
-        CampaignFactory.abi,
-        provider
-      );
-
-      const getAllCampaigns = contract.filters.campaignCreated(
-        null,
-        null,
-        Address
-      );
-      const AllCampaigns = await contract.queryFilter(getAllCampaigns);
-      const AllData = AllCampaigns.map((e) => {
-        return {
-          title: e.args.title,
-          image: e.args.imgURI,
-          owner: e.args.owner,
-          timeStamp: parseInt(e.args.timestamp),
-          amount: ethers.utils.formatEther(e.args.requiredAmount),
-          address: e.args.campaignAddress,
-        };
-      });
-      setCampaignsData(AllData);
-    };
     Request();
   }, []);
 
@@ -55,45 +56,42 @@ export default function dashboard() {
       {/* Cards Container */}
       <CardsWrapper>
         {/* Card */}
-        {campaignsData.map((e) => {
-          return (
-            <Card key={e.title}>
-              <CardImg>
-                <Image
-                  alt="crowdfunding dapp"
-                  layout="fill"
-                  src={"https://crowdfunding.infura-ipfs.io/ipfs/" + e.image}
-                />
-              </CardImg>
-              <Title>{e.title}</Title>
-              <CardData>
-                <Text>
-                  Owner
-                  <AccountBoxIcon />
-                </Text>
-                <Text>
-                  {e.owner.slice(0, 6)}...{e.owner.slice(39)}
-                </Text>
-              </CardData>
-              <CardData>
-                <Text>
-                  Amount
-                  <PaidIcon />
-                </Text>
-                <Text>{e.amount} Matic</Text>
-              </CardData>
-              <CardData>
-                <Text>
-                  <EventIcon />
-                </Text>
-                <Text>{new Date(e.timeStamp * 1000).toLocaleString()}</Text>
-              </CardData>
-              <Link passHref href={"/" + e.address}>
-                <Button>Go to Campaign</Button>
-              </Link>
-            </Card>
-          );
-        })}
+        {campaignsData.length > 0 &&
+          campaignsData.map((e) => {
+            return (
+              <Card key={e.title}>
+                <CardImg>
+                  <Image alt="crowdfunding dapp" layout="fill" src={e.image} />
+                </CardImg>
+                <Title>{e.title}</Title>
+                <CardData>
+                  <Text>
+                    Owner
+                    <AccountBoxIcon />
+                  </Text>
+                  <Text>
+                    {e.owner.slice(0, 6)}...{e.owner.slice(39)}
+                  </Text>
+                </CardData>
+                <CardData>
+                  <Text>
+                    Amount
+                    <PaidIcon />
+                  </Text>
+                  <Text>{e.amount} Matic</Text>
+                </CardData>
+                <CardData>
+                  <Text>
+                    <EventIcon />
+                  </Text>
+                  <Text>{new Date(e.timeStamp * 1000).toLocaleString()}</Text>
+                </CardData>
+                <Link passHref href={"/" + e.address}>
+                  <Button>Go to Campaign</Button>
+                </Link>
+              </Card>
+            );
+          })}
         {/* Card */}
       </CardsWrapper>
     </HomeWrapper>
@@ -117,6 +115,7 @@ const Card = styled.div`
   width: 30%;
   margin-top: 20px;
   background-color: ${(props) => props.theme.bgDiv};
+
   &:hover {
     transform: translateY(-10px);
     transition: transform 0.5s;
