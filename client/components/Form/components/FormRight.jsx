@@ -4,80 +4,80 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { TailSpin } from "react-loader-spinner";
 import axios from "axios";
+import { ethers } from "ethers";
+import CampaignFactory from "../../../utils/CampaignFactory.json";
+
 function FormRight({ title, story }) {
   const amount = useRef(0);
   const category = useRef("");
   const [image, setImage] = useState(null);
   const [storyUrl, setStoryUrl] = useState(null);
   const [imageUrl, setImageUrl] = useState(null);
+  const [address, setAddress] = useState("");
 
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [loaded, setLoaded] = useState(false);
   const [uploaded, setUploaded] = useState(false);
   const uploadFiles = async (e) => {
     //upload files
     try {
-      // setUploading(true);
-      const formData = new FormData();
-      formData.append("image", image);
-
-      const config = {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      };
-      // const data = await axios.get("/api/file", { image }, config);
-      const data = await axios.post(
-        "http://localhost:5000/file",
-        { image },
-        config
+      setUploading(true);
+      setImageUrl(
+        "https://crowdfundingplatform.s3.ap-south-1.amazonaws.com/campaign/29caafc6-ba6c-4936-9ded-792e22e37966"
       );
-      // const data = await fetch("/api/file");
-      // const resp = await data.json();
-      console.log(data);
-      // setUploading(false);
-      // setUploaded(true);
+      setStoryUrl(
+        "https://crowdfundingplatform.s3.ap-south-1.amazonaws.com/campaign/text.txt"
+      );
+      setUploading(false);
+      setUploaded(true);
     } catch (err) {
       console.log(err);
     }
   };
   const startCampaign = async (e) => {
     e.preventDefault();
-    // const provider = new ethers.providers.Web3Provider(window.ethereum);
-    // const signer = provider.getSigner();
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    const signer = provider.getSigner();
+    try {
+      if (title.current.value === "") {
+        toast.warn("Title Field Is Empty");
+      } else if (storyUrl === "") {
+        toast.warn("Story Field Is Empty");
+      } else if (!amount.current.value) {
+        toast.warn("Required Amount Field Is Empty");
+      } else if (uploaded == false) {
+        toast.warn("Files Upload Required");
+      } else {
+        setLoading(true);
+        setLoaded(false);
+        const contract = new ethers.Contract(
+          // process.env.Deployed_Contract_Address,
+          "0xeEb2C67c67a410248C094dFd7b7284B8c24818bD",
+          CampaignFactory.abi,
+          signer
+        );
 
-    // if (title === "") {
-    //   toast.warn("Title Field Is Empty");
-    // } else if (storyUrl === "") {
-    //   toast.warn("Story Field Is Empty");
-    // } else if (!amount) {
-    //   toast.warn("Required Amount Field Is Empty");
-    // } else if (uploaded == false) {
-    //   toast.warn("Files Upload Required");
-    // } else {
-    //   setLoading(true);
+        const campaignAmount = ethers.utils.parseEther(amount.current.value);
 
-    //   const contract = new ethers.Contract(
-    //     process.env.Deployed_Contract_Address,
-    //     CampaignFactory.abi,
-    //     signer
-    //   );
+        const campaignData = await contract.createCampaign(
+          title.current.value,
+          campaignAmount,
+          imageUrl,
+          storyUrl,
+          category
+        );
+        await campaignData.wait();
 
-    //   const CampaignAmount = ethers.utils.parseEther(form.requiredAmount);
-
-    //   const campaignData = await contract.createCampaign(
-    //     form.campaignTitle,
-    //     CampaignAmount,
-    //     imageUrl,
-    //     form.category,
-    //     storyUrl
-    //   );
-
-    //   await campaignData.wait();
-
-    //   setAddress(campaignData.to);
+        setAddress(campaignData.to);
+        setLoading(false);
+        setLoaded(true);
+        console.log(address);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   };
-  // };
   return (
     <FormRightWrapper>
       <FormInput>
@@ -122,7 +122,18 @@ function FormRight({ title, story }) {
           Files uploaded Sucessfully
         </Button>
       )}
-      <Button onClick={startCampaign}>Start Campaign</Button>
+      {loading == true ? (
+        <Button>
+          <TailSpin color="#fff" height={20} />
+        </Button>
+      ) : loaded == false ? (
+        <Button onClick={startCampaign}>Start Campaign</Button>
+      ) : (
+        <Button style={{ cursor: "no-drop" }}>
+          Campaign Created Sucessfully
+        </Button>
+      )}
+      {/* <Button onClick={startCampaign}>Start Campaign</Button> */}
     </FormRightWrapper>
   );
 }
