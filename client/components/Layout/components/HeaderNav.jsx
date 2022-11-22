@@ -28,8 +28,10 @@ function HeaderNav() {
 const HeaderNavWrapper = styled.div`
   display: flex;
   align-items: center;
+  
   justify-content: space-between;
   background-color: ${(props) => props.theme.bgDiv};
+  box-shadow: ${(props) => props.theme.shadowButton};
   padding: 6px;
   height: 50%;
   border-radius: 10px;

@@ -34,6 +34,7 @@ const ThemeToggle = styled.div`
   justify-content: center;
   align-items: center;
   background-color: ${(props) => props.theme.bgDiv};
+  box-shadow: ${(props) => props.theme.shadowButton};
   height: 100%;
   padding: 5px;
   width: 50px;
