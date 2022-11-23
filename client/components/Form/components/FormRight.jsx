@@ -5,9 +5,11 @@ import { toast } from "react-toastify";
 import { TailSpin } from "react-loader-spinner";
 import axios from "axios";
 import { ethers } from "ethers";
+import { useRouter } from 'next/router';
 import CampaignFactory from "../../../utils/CampaignFactory.json";
 
 function FormRight({ title, story }) {
+  const router = useRouter();
   const amount = useRef(0);
   const category = useRef("");
   const [image, setImage] = useState(null);
@@ -73,6 +75,7 @@ function FormRight({ title, story }) {
         setLoading(false);
         setLoaded(true);
         console.log(address);
+        router.back()
       }
     } catch (err) {
       console.log(err);

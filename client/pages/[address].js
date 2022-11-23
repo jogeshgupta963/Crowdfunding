@@ -255,6 +255,7 @@ const DonateSection = styled.div`
 const Input = styled.input`
   padding: 8px 15px;
   background-color: ${(props) => props.theme.bgDiv};
+  box-shadow: ${(props) => props.theme.showdowInput};
   color: ${(props) => props.theme.color};
   border: none;
   border-radius: 8px;
@@ -268,9 +269,9 @@ const Donate = styled.button`
   justify-content: center;
   width: 40%;
   padding: 15px;
-  color: white;
-  background-color: #00b712;
-  background-image: linear-gradient(180deg, #00b712 0%, #5aff15 80%);
+  color: green;
+  background-color: ${(props) => props.theme.bgSubDiv};
+  box-shadow: ${(props) => props.theme.shadowButton};
   border: none;
   cursor: pointer;
   font-weight: bold;
@@ -315,13 +316,16 @@ const DonationTitle = styled.div`
   text-transform: uppercase;
   padding: 4px;
   text-align: center;
-  background-color: #4cd137;
+  background-color: ${(props) => props.theme.bgDiv};
+  box-shadow: ${(props) => props.theme.showdowInput};
+
 `;
 const Donation = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 4px;
   background-color: ${(props) => props.theme.bgSubDiv};
+  box-shadow: ${(props) => props.theme.shadowButton};
   padding: 4px 8px;
 `;
 const DonationData = styled.p`

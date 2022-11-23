@@ -261,7 +261,7 @@ const Button = styled.button`
   cursor: pointer;
   font-family: "Roboto";
   text-transform: uppercase;
-  color: 'green' ;
+  color: green;
   font-size: 14px;
   font-weight: bold;
 `;

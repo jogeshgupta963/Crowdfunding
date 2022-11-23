@@ -41,7 +41,7 @@ export default function Dashboard() {
         owner: e.args.owner,
         timeStamp: parseInt(e.args.timestamp),
         amount: ethers.utils.formatEther(e.args.requiredAmount),
-        address: e.args.campaignAddress,
+        address: e.args.campaign,
       };
     });
     setCampaignsData(AllData);
@@ -115,7 +115,7 @@ const Card = styled.div`
   width: 30%;
   margin-top: 20px;
   background-color: ${(props) => props.theme.bgDiv};
-
+  box-shadow: ${(props) => props.theme.shadowButton};
   &:hover {
     transform: translateY(-10px);
     transition: transform 0.5s;
@@ -160,13 +160,13 @@ const Button = styled.button`
   padding: 8px;
   text-align: center;
   width: 100%;
-  background-color: #00b712;
-  background-image: linear-gradient(180deg, #00b712 0%, #5aff15 80%);
+  background-color: ${(props) => props.theme.bgDiv};
+  box-shadow: ${(props) => props.theme.shadowButton};
   border: none;
   cursor: pointer;
   font-family: "Roboto";
   text-transform: uppercase;
-  color: #fff;
+  color: green;
   font-size: 14px;
   font-weight: bold;
 `;
