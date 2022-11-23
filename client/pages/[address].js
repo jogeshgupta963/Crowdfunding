@@ -69,7 +69,7 @@ export default function Details({ Data, DonationsData }) {
             alt="crowdfunding dapp"
             layout="fill"
             src={Data.image}
-            style={{ width: "100%" }}
+            style={{ width: "100%", height: "98%" }}
           />
         </ImageSection>
         <Text>
@@ -77,7 +77,7 @@ export default function Details({ Data, DonationsData }) {
             id="frmFile"
             src={Data.storyUrl}
             // onLoad="LoadFile();"
-            style={{ width: "100%" }}
+            style={{ width: "100%", backgroundColor: 'blue' }}
           ></iframe>
         </Text>
       </LeftContainer>
@@ -223,6 +223,11 @@ const DetailWrapper = styled.div`
 `;
 const LeftContainer = styled.div`
   width: 45%;
+  display: flex;
+  flex-direction: column;
+`;
+const iframe = styled.div`
+  color: red; 
 `;
 const RightContainer = styled.div`
   width: 50%;
