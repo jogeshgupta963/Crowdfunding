@@ -23,16 +23,16 @@ function Wallet() {
       method: "eth_requestAccounts",
     });
     const provider = new ethers.providers.Web3Provider(window.ethereum, "any");
-    // if (provider.network !== "matic") {
-    //   await window.ethereum.request({
-    //     method: "wallet_addEthereumChain",
-    //     params: [
-    //       {
-    //         ...networks["polygon"],
-    //       },
-    //     ],
-    //   });
-    // }
+    if (provider.network !== "matic") {
+      await window.ethereum.request({
+        method: "wallet_addEthereumChain",
+        params: [
+          {
+            ...networks["polygon"],
+          },
+        ],
+      });
+    }
     const account = provider.getSigner();
     const add = await account.getAddress();
     const bal = ethers.utils.formatEther(await account.getBalance());
