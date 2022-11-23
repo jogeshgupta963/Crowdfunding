@@ -190,6 +190,7 @@ const FilterWrapper = styled.div`
 const Category = styled.div`
   padding: 10px 15px;
   background-color: ${(props) => props.theme.bgDiv};
+  box-shadow: ${(props) => props.theme.shadowButton};
   margin: 0px 15px;
   border-radius: 8px;
   font-family: "Poppins";
@@ -206,7 +207,9 @@ const CardsWrapper = styled.div`
 const Card = styled.div`
   width: 30%;
   margin-top: 20px;
+  border-radius: 8px;
   background-color: ${(props) => props.theme.bgDiv};
+  box-shadow: ${(props) => props.theme.shadowButton};
   &:hover {
     transform: translateY(-10px);
     transition: transform 0.5s;
@@ -219,7 +222,8 @@ const Card = styled.div`
 const CardImg = styled.div`
   position: relative;
   height: 120px;
-  width: 100%;
+  width: 125%;
+  border-radius: 8px 8px 0px 0px;
 `;
 const Title = styled.h2`
   font-family: "Roboto";
@@ -251,13 +255,13 @@ const Button = styled.button`
   padding: 8px;
   text-align: center;
   width: 100%;
-  background-color: #00b712;
-  background-image: linear-gradient(180deg, #00b712 0%, #5aff15 80%);
+  background-color: ${(props) => props.theme.bgSubDiv};
+  box-shadow: ${(props) => props.theme.shadowButton};
   border: none;
   cursor: pointer;
   font-family: "Roboto";
   text-transform: uppercase;
-  color: #fff;
+  color: 'green' ;
   font-size: 14px;
   font-weight: bold;
 `;
